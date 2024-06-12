@@ -1,5 +1,4 @@
 from config.__init__ import CURSOR, CONN
-
 class User:
     all = {}
 
