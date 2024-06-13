@@ -1,42 +1,51 @@
-from helpers import *
+from helpers import (
+    exit_program, create_user, delete_user, display_users, 
+    create_recipe, delete_recipe, display_recipes, 
+    create_ingredient, delete_ingredient, display_ingredients, 
+    add_ingredient_to_recipe
+)
 
-def main_menu():
+def main():
     while True:
-        print("\n--- Recipe Manager ---")
-        print("1. Add User")
-        print("2. Add Recipe")
-        print("3. Add Ingredient to Recipe")
-        print("4. View Users")
-        print("5. View Recipes")
-        print("6. View Ingredients")
-        print("7. Delete User")
-        print("8. Delete Recipe")
-        print("9. Delete Ingredient")
-        print("10. Exit")
+        print("Recipe Manager CLI")
+        print("1. View all users")
+        print("2. Add a user")
+        print("3. Delete a user")
+        print("4. View all recipes")
+        print("5. Add a recipe")
+        print("6. Delete a recipe")
+        print("7. View all ingredients")
+        print("8. Add an ingredient")
+        print("9. Delete an ingredient")
+        print("10. Add ingredient to recipe")
+        print("11. Exit")
+
         choice = input("Enter your choice: ")
 
-        if choice == '1':
-            create_user()
-        elif choice == '2':
-            create_recipe()
-        elif choice == '3':
-            add_ingredient_to_recipe()
-        elif choice == '4':
+        if choice == "1":
             display_users()
-        elif choice == '5':
-            display_recipes()
-        elif choice == '6':
-            display_ingredients()
-        elif choice == '7':
+        elif choice == "2":
+            create_user()
+        elif choice == "3":
             delete_user()
-        elif choice == '8':
+        elif choice == "4":
+            display_recipes()
+        elif choice == "5":
+            create_recipe()
+        elif choice == "6":
             delete_recipe()
-        elif choice == '9':
+        elif choice == "7":
+            display_ingredients()
+        elif choice == "8":
+            create_ingredient()
+        elif choice == "9":
             delete_ingredient()
-        elif choice == '10':
+        elif choice == "10":
+            add_ingredient_to_recipe()
+        elif choice == "11":
             exit_program()
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice! Please try again.")
 
 if __name__ == "__main__":
-    main_menu()
+    main()

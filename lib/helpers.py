@@ -69,7 +69,6 @@ def display_ingredients():
 def add_ingredient_to_recipe():
     recipe_id = input("Enter recipe id: ")
     ingredient_id = input("Enter ingredient id: ")
-    recipe_ingredient = RecipeIngredient.create(recipe_id, ingredient_id)
-    print(f"Ingredient {ingredient_id} added to recipe {recipe_id}")
-
-
+    quantity = input("Enter quantity: ")
+    recipe_ingredient = RecipeIngredient.create(recipe_id, ingredient_id, quantity)
+    print(f"Ingredient {ingredient_id} added to recipe {recipe_id} with quantity {quantity}")

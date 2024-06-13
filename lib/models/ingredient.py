@@ -1,31 +1,21 @@
-from config import CURSOR, CONN
+from config.__init__ import CURSOR, CONN
 
 class Ingredient:
     all = {}
 
-    def __init__(self, name, id=None):
-        self.id = id
+    def __init__(self, name, ingredient_id=None):
+        self.ingredient_id = ingredient_id
         self.name = name
 
     def __repr__(self):
-        return f"Ingredient(id={self.id}, name='{self.name}')"
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        if not value:
-            raise ValueError("Name cannot be empty")
-        self._name = value
+        return f"Ingredient(id={self.ingredient_id}, name='{self.name}')"
 
     @classmethod
     def create_table(cls):
         sql = """
             CREATE TABLE IF NOT EXISTS ingredients (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT
+                name TEXT NOT NULL
             );
         """
         CURSOR.execute(sql)
@@ -38,14 +28,11 @@ class Ingredient:
         CONN.commit()
 
     def save(self):
-        sql = """
-            INSERT INTO ingredients (name)
-            VALUES (?);
-        """
+        sql = "INSERT INTO ingredients (name) VALUES (?);"
         CURSOR.execute(sql, (self.name,))
         CONN.commit()
-        self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
+        self.ingredient_id = CURSOR.lastrowid
+        type(self).all[self.ingredient_id] = self
 
     @classmethod
     def create(cls, name):
@@ -54,30 +41,26 @@ class Ingredient:
         return ingredient
 
     def update(self):
-        sql = """
-            UPDATE ingredients
-            SET name = ?
-            WHERE id = ?;
-        """
-        CURSOR.execute(sql, (self.name, self.id))
+        sql = "UPDATE ingredients SET name = ? WHERE id = ?;"
+        CURSOR.execute(sql, (self.name, self.ingredient_id))
         CONN.commit()
 
     def delete(self):
         sql = "DELETE FROM ingredients WHERE id = ?;"
-        CURSOR.execute(sql, (self.id,))
+        CURSOR.execute(sql, (self.ingredient_id,))
         CONN.commit()
-        del type(self).all[self.id]
-        self.id = None
+        del type(self).all[self.ingredient_id]
+        self.ingredient_id = None
 
     @classmethod
     def instance_from_db(cls, row):
         ingredient = cls.all.get(row[0])
         if ingredient:
+            ingredient.ingredient_id = row[0]
             ingredient.name = row[1]
         else:
-            ingredient = cls(row[1])
-            ingredient.id = row[0]
-            cls.all[ingredient.id] = ingredient
+            ingredient = cls(row[1], ingredient_id=row[0])
+            cls.all[ingredient.ingredient_id] = ingredient
         return ingredient
 
     @classmethod
@@ -85,9 +68,3 @@ class Ingredient:
         sql = "SELECT * FROM ingredients;"
         rows = CURSOR.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
-
-    @classmethod
-    def find_by_id(cls, id):
-        sql = "SELECT * FROM ingredients WHERE id = ?;"
-        row = CURSOR.execute(sql, (id,)).fetchone()
-        return cls.instance_from_db(row) if row else None
