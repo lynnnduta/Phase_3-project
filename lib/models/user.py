@@ -1,4 +1,6 @@
-from config.__init__ import CURSOR, CONN
+import re
+from config import CURSOR, CONN
+
 class User:
     all = {}
 
@@ -63,3 +65,43 @@ class User:
         user = cls(username, email)
         user.save()
         return user
+
+    def update(self):
+        sql = """
+            UPDATE users
+            SET username = ?, email = ?
+            WHERE id = ?;
+        """
+        CURSOR.execute(sql, (self.username, self.email, self.id))
+        CONN.commit()
+
+    def delete(self):
+        sql = "DELETE FROM users WHERE id = ?;"
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+        del type(self).all[self.id]
+        self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        user = cls.all.get(row[0])
+        if user:
+            user.username = row[1]
+            user.email = row[2]
+        else:
+            user = cls(row[1], row[2])
+            user.id = row[0]
+            cls.all[user.id] = user
+        return user
+
+    @classmethod
+    def get_all(cls):
+        sql = "SELECT * FROM users;"
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = "SELECT * FROM users WHERE id = ?;"
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None

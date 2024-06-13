@@ -3,47 +3,42 @@ from models.recipe import Recipe
 from models.ingredient import Ingredient
 from models.recipe_ingredient import RecipeIngredient
 
-def initialize_database():
-    """Initialize the database by creating tables."""
-    Recipe.drop_table()
-    Recipe.create_table()
+User.drop_table()
+User.create_table()
 
-    Ingredient.drop_table()
-    Ingredient.create_table()
+Recipe.drop_table()
+Recipe.create_table()
 
-    RecipeIngredient.drop_table()
-    RecipeIngredient.create_table()
+Ingredient.drop_table()
+Ingredient.create_table()
 
-    User.drop_table()
-    User.create_table()
+RecipeIngredient.drop_table()
+RecipeIngredient.create_table()
 
-    print("Tables created successfully.")
+# Creating seed data
 
-def seed_data():
-    """Seed data into the tables."""
-    # Seed data for ingredients
-    ingredient1 = Ingredient.create("Flour")
-    ingredient2 = Ingredient.create("Sugar")
-    ingredient3 = Ingredient.create("Eggs")
-    ingredient4 = Ingredient.create("Chocolate")
+# Seed data for users
+user1 = User.create("john_doe", "john@example.com")
+user2 = User.create("jane_doe", "jane@example.com")
 
-    # Seed data for recipes
-    recipe1 = Recipe.create("Chocolate Cake", "Delicious chocolate cake recipe")
-    recipe2 = Recipe.create("Pancakes", "Classic pancakes with syrup")
+# Seed data for recipes
+recipe1 = Recipe.create("Pancakes", user1.id)
+recipe2 = Recipe.create("Omelette", user2.id)
 
-    # Seed data for recipe-ingredient relationships
-    RecipeIngredient.create(recipe1.recipe_id, ingredient1.ingredient_id, 2)
-    RecipeIngredient.create(recipe1.recipe_id, ingredient2.ingredient_id, 1)
-    RecipeIngredient.create(recipe1.recipe_id, ingredient3.ingredient_id, 3)
-    RecipeIngredient.create(recipe2.recipe_id, ingredient1.ingredient_id, 1)
-    RecipeIngredient.create(recipe2.recipe_id, ingredient2.ingredient_id, 1)
+# Seed data for ingredients
+ingredient1 = Ingredient.create("Flour")
+ingredient2 = Ingredient.create("Eggs")
+ingredient3 = Ingredient.create("Milk")
+ingredient4 = Ingredient.create("Salt")
 
-    # Seed data for users
-    user1 = User.create("alice", "alice@example.com")
-    user2 = User.create("bob", "bob@example.com")
+# Seed data for recipe ingredients
+recipe_ingredient1 = RecipeIngredient.create(recipe1.id, ingredient1.id)
+recipe_ingredient2 = RecipeIngredient.create(recipe1.id, ingredient2.id)
+recipe_ingredient3 = RecipeIngredient.create(recipe1.id, ingredient3.id)
+recipe_ingredient4 = RecipeIngredient.create(recipe2.id, ingredient2.id)
+recipe_ingredient5 = RecipeIngredient.create(recipe2.id, ingredient4.id)
 
-    print("Seed data inserted successfully.")
-
-if __name__ == "__main__":
-    initialize_database()
-    seed_data()
+print(user1)
+print(recipe1)
+print(ingredient1)
+print(recipe_ingredient1)

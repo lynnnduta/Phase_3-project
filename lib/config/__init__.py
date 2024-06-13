@@ -1,9 +1,11 @@
 import sqlite3
 
-DATABASE_FILE = 'recipe_manager.db'
-
-
-CONN = sqlite3.connect(DATABASE_FILE)
-
-
+CONN = sqlite3.connect('db/recipe_manager.db')
 CURSOR = CONN.cursor()
+
+def close_connection():
+    CONN.close()
+
+def initialize_database():
+    
+    pass
